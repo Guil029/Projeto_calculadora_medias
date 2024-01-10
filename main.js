@@ -1,6 +1,6 @@
 const form = document.getElementById('form-atividade');
-const imgAprovado ='<img src="./images/aprovado.png" alt="Emoji celebrando" />';
-const imgReprovado ='<img src="./images/reprovado.png" alt="Emoji triste" />';
+const imgAprovado = '<img src="./aprovado.png" alt="Emoji celebrando" />';
+const imgReprovado = '<img src="./reprovado.png" alt="Emoji triste" />';
 const atividades = [];
 const notas = [];
 const spanAprovado = '<span class="resultado aprovado">Aprovado</span>';
@@ -8,6 +8,7 @@ const spanReprovado = '<span class="resultado reprovado">Reprovado</span>';
 const notaMinima = parseFloat(prompt("Digite a nota mínima"));
 
 let linhas = '';
+let media; // Adicionado para corrigir o problema de referência
 
 form.addEventListener('submit', function(e) {
     e.preventDefault();
@@ -17,48 +18,47 @@ form.addEventListener('submit', function(e) {
     atualizaMediaFinal();
 });
 
-function adicionaLinha(){
+function adicionaLinha() {
     const inputNomeAtividade = document.getElementById('nome-atividade');
     const inputNotaAtividade = document.getElementById('nota-atividade');
 
-    if(atividades.includes(inputNomeAtividade.value)) {
-        alert(`A atividade: ${inputNomeAtividade.value} já se foi inserisda`);
-    } else{
+    if (atividades.includes(inputNomeAtividade.value)) {
+        alert(`A atividade: ${inputNomeAtividade.value} já foi inserida`);
+    } else {
+        atividades.push(inputNomeAtividade.value);
+        notas.push(parseFloat(inputNotaAtividade.value));
 
-    atividades.push(inputNomeAtividade.value);
-    notas.push(parseFloat(inputNotaAtividade.value));
+        let linha = '<tr>';
+        linha += `<td> ${inputNomeAtividade.value}</td>`;
+        linha += `<td>${inputNotaAtividade.value}</td>`;
+        linha += `<td>${inputNotaAtividade.value >= notaMinima ? imgAprovado : imgReprovado}</td>`;
+        linha += '</tr>';
 
-    let linha = '<tr>';
-    linha += `<td> ${inputNomeAtividade.value}</td>`;
-    linha += `<td>${inputNotaAtividade.value}</td>`;
-    linha += `<td>${inputNotaAtividade.value >= notaMinima ? imgAprovado : imgReprovado}<td>`;
-    linha += '</td>';
-
-    linhas += linha;
+        linhas += linha;
     }
 
     inputNomeAtividade.value = '';
     inputNotaAtividade.value = '';
 }
 
-function atualizaTabela(){
+function atualizaTabela() {
     const corpoTabela = document.querySelector('tbody');
     corpoTabela.innerHTML = linhas;
 }
 
-function atualizaMediaFinal(){
+function atualizaMediaFinal() {
     const mediaFinal = calculaMediaFinal();
 
     document.getElementById('media-final-valor').innerHTML = mediaFinal;
     document.getElementById('media-final-resultado').innerHTML = mediaFinal >= notaMinima ? spanAprovado : spanReprovado;
 
-    console.log(media);
+    console.log(mediaFinal); // Corrigido para imprimir mediaFinal em vez de media
 }
 
-function calculaMediaFinal(){
+function calculaMediaFinal() {
     let somaDasNotas = 0;
 
-    for (let i = o; i < notas.length; i++){
+    for (let i = 0; i < notas.length; i++) {
         somaDasNotas += notas[i];
     }
 
